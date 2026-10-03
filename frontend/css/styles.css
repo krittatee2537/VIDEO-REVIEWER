@@ -89,6 +89,15 @@
     border: 1px solid rgba(225, 48, 108, 0.3);
 }
 
+/* Download MP4 button styling */
+.btn-download-card {
+    transition: all 0.2s ease;
+}
+.btn-download-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;

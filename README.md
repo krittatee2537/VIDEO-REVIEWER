@@ -62,6 +62,7 @@ product-review-video-search/
 │   │   └── styles.css             # Glassmorphic UI styles & badges
 │   └── js/
 │       ├── api.js                 # API Communication module
+│       ├── google_sheets.js       # Google Sheets Database Connector
 │       └── app.js                 # Main UI & search handler
 ├── run.py                         # One-click startup script
 └── README.md                      # Documentation
@@ -69,8 +70,26 @@ product-review-video-search/
 
 ---
 
+## 📊 การใช้งาน Google Sheets เป็น Database
+
+ระบบรองรับการใช้ Google Sheets เป็นระบบจัดการฐานข้อมูล (Headless CMS):
+1. เปิดหน้าเว็บแล้วคลิกปุ่ม **"Google Database"** ที่มุมขวาบน
+2. กด **"ดาวน์โหลดไฟล์ต้นแบบ (CSV)"** แล้วนำไป Import ใน Google Sheets ของคุณ
+3. ตั้งค่าการแชร์ใน Google Sheets เป็น **"ทุกคนที่มีลิงก์สามารถดูได้" (Anyone with the link can view)**
+4. คัดลอกลิงก์หรือ Sheet ID มาวางในช่องแล้วกด **"เชื่อมต่อและซิงค์"**
+5. ข้อมูลวิดีโอ หมวดหมู่ และลิงก์ MP4 ในตาราง Google Sheets จะถูกดึงมาแสดงบนหน้าเว็บแบบเรียลไทม์ทันที!
+
+---
+
+## ⬇️ การดาวน์โหลดวิดีโอเป็นไฟล์ MP4
+
+- ในแต่ละการ์ดวิดีโอและในหน้าต่าง Video Modal จะมีปุ่ม **"ดาวน์โหลด MP4" (⬇️)**
+- เมื่อคลิก ระบบจะดึงไฟล์และบันทึกลงในเครื่องคอมพิวเตอร์ของคุณเป็นไฟล์ `.mp4` พร้อมตั้งชื่อตามชื่อคลิปวิดีโอโดยอัตโนมัติ
+
+---
+
 ## 🌐 เปิดใช้งานผ่าน GitHub Pages
 
-เว็บเปิดได้ที่: https://krittatee2537.github.io/VIDEO-REVIEWER/
+เว็บเปิดได้ที่: **https://krittatee2537.github.io/VIDEO-REVIEWER/**
 
-บน GitHub Pages ไม่มี backend Python หน้าเว็บจะค้นหาและวิเคราะห์ภาพในเบราว์เซอร์เองด้วย `frontend/js/engine.js` และข้อมูลใน `frontend/js/data.js` (สร้างจาก `backend/services/seed_dataset.py`) เมื่อรัน `python run.py` ในเครื่อง หน้าเว็บจะใช้ backend FastAPI ให้อัตโนมัติ
+บน GitHub Pages ไม่มี backend Python หน้าเว็บจะค้นหาและวิเคราะห์ภาพในเบราว์เซอร์เองด้วย `frontend/js/engine.js` และข้อมูลใน `frontend/js/data.js` (สร้างจาก `backend/services/seed_dataset.py`) รวมถึงสามารถซิงค์ดึงข้อมูลตรงจาก Google Sheets ได้โดยไม่ต้องมีเซิร์ฟเวอร์ และเมื่อรัน `python run.py` ในเครื่อง หน้าเว็บจะสลับไปใช้ backend FastAPI ให้อัตโนมัติ

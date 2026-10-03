@@ -1,6 +1,5 @@
 /**
  * Video catalog + platform metadata for static (GitHub Pages) mode.
- * Generated from backend/services/seed_dataset.py - keep the two in sync.
  */
 window.SEED_VIDEOS = [
   {
@@ -31,7 +30,8 @@ window.SEED_VIDEOS = [
       "มือถือ",
       "camera",
       "测评"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
   },
   {
     "id": "douyin-tech-02",
@@ -59,7 +59,8 @@ window.SEED_VIDEOS = [
       "camera",
       "ถ่ายภาพ",
       "航拍"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
   },
   {
     "id": "xhs-beauty-01",
@@ -89,7 +90,8 @@ window.SEED_VIDEOS = [
       "แต่งหน้า",
       "口红",
       "试色"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
   },
   {
     "id": "bili-home-01",
@@ -116,7 +118,8 @@ window.SEED_VIDEOS = [
       "หุ่นยนต์ดูดฝุ่น",
       "เครื่องใช้ไฟฟ้า",
       "扫地机器人"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyblazes.mp4"
   },
   {
     "id": "douyin-shoes-01",
@@ -145,7 +148,8 @@ window.SEED_VIDEOS = [
       "รองเท้าผ้าใบ",
       "板鞋",
       "穿搭"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
   },
   {
     "id": "ks-toy-01",
@@ -174,7 +178,8 @@ window.SEED_VIDEOS = [
       "ของเล่น",
       "盲盒",
       "潮玩"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
   },
   {
     "id": "yt-tech-01",
@@ -204,7 +209,8 @@ window.SEED_VIDEOS = [
       "มือถือ",
       "mkbhd",
       "review"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
   },
   {
     "id": "yt-home-01",
@@ -232,7 +238,8 @@ window.SEED_VIDEOS = [
       "ทำผม",
       "เครื่องม้วนผม",
       "styler"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
   },
   {
     "id": "tt-shoes-01",
@@ -261,7 +268,8 @@ window.SEED_VIDEOS = [
       "รองเท้า",
       "ไนกี้",
       "รองเท้าผ้าใบ"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
   },
   {
     "id": "yt-gaming-01",
@@ -289,7 +297,8 @@ window.SEED_VIDEOS = [
       "gaming",
       "เกม",
       "เครื่องเกม"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"
   },
   {
     "id": "ig-fashion-01",
@@ -316,7 +325,8 @@ window.SEED_VIDEOS = [
       "แว่นตา",
       "แว่นกันแดด",
       "แฟชั่น"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
   },
   {
     "id": "yt-coffee-01",
@@ -343,7 +353,8 @@ window.SEED_VIDEOS = [
       "กาแฟ",
       "เครื่องชงกาแฟ",
       "แคปซูล"
-    ]
+    ],
+    "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
   }
 ];
 

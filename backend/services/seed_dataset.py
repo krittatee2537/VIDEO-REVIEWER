@@ -1,10 +1,4 @@
-"""
-Seed dataset containing curated video review catalog for Chinese and International platforms.
-Provides high-speed, reliable search results with rich product metadata.
-"""
-
 SEED_VIDEOS = [
-    # --- ELECTRONICS & TECH (CHINESE PLATFORMS) ---
     {
         "id": "bili-tech-01",
         "title": "【深度测评】iPhone 16 Pro Max 真实体验一个月！续航与影像提升真的巨大吗？",
@@ -23,7 +17,18 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.bilibili.com/video/BV1iPhone16ProMax",
         "category": "Electronics",
-        "keywords": ["iphone", "iphone 16", "apple", "smartphone", "โทรศัพท์", "ไอโฟน", "มือถือ", "camera", "测评"]
+        "keywords": [
+            "iphone",
+            "iphone 16",
+            "apple",
+            "smartphone",
+            "โทรศัพท์",
+            "ไอโฟน",
+            "มือถือ",
+            "camera",
+            "测评"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
     },
     {
         "id": "douyin-tech-02",
@@ -43,7 +48,16 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.douyin.com/video/7290192831",
         "category": "Electronics",
-        "keywords": ["dji", "drone", "mini 4 pro", "โดรน", "camera", "ถ่ายภาพ", "航拍"]
+        "keywords": [
+            "dji",
+            "drone",
+            "mini 4 pro",
+            "โดรน",
+            "camera",
+            "ถ่ายภาพ",
+            "航拍"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
     },
     {
         "id": "xhs-beauty-01",
@@ -63,7 +77,18 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.xiaohongshu.com/discovery/item/65819a",
         "category": "Beauty",
-        "keywords": ["lipstick", "lip glow", "holdlive", "cosmetics", "ลิปสติก", "เครื่องสำอาง", "แต่งหน้า", "口红", "试色"]
+        "keywords": [
+            "lipstick",
+            "lip glow",
+            "holdlive",
+            "cosmetics",
+            "ลิปสติก",
+            "เครื่องสำอาง",
+            "แต่งหน้า",
+            "口红",
+            "试色"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
     },
     {
         "id": "bili-home-01",
@@ -83,7 +108,15 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.bilibili.com/video/BV1RoborockS8",
         "category": "Home",
-        "keywords": ["roborock", "vacuum", "robot vacuum", "หุ่นยนต์ดูดฝุ่น", "เครื่องใช้ไฟฟ้า", "扫地机器人"]
+        "keywords": [
+            "roborock",
+            "vacuum",
+            "robot vacuum",
+            "หุ่นยนต์ดูดฝุ่น",
+            "เครื่องใช้ไฟฟ้า",
+            "扫地机器人"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyblazes.mp4"
     },
     {
         "id": "douyin-shoes-01",
@@ -103,7 +136,17 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.douyin.com/video/728193021",
         "category": "Fashion",
-        "keywords": ["adidas", "samba", "sneakers", "shoes", "รองเท้า", "รองเท้าผ้าใบ", "板鞋", "穿搭"]
+        "keywords": [
+            "adidas",
+            "samba",
+            "sneakers",
+            "shoes",
+            "รองเท้า",
+            "รองเท้าผ้าใบ",
+            "板鞋",
+            "穿搭"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
     },
     {
         "id": "ks-toy-01",
@@ -123,10 +166,18 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.kuaishou.com/short-video/3x89a",
         "category": "Toys",
-        "keywords": ["labubu", "popmart", "blindbox", "ลาบูบู้", "กล่องสุ่ม", "ของเล่น", "盲盒", "潮玩"]
+        "keywords": [
+            "labubu",
+            "popmart",
+            "blindbox",
+            "ลาบูบู้",
+            "กล่องสุ่ม",
+            "ของเล่น",
+            "盲盒",
+            "潮玩"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
     },
-
-    # --- INTERNATIONAL PLATFORMS (YOUTUBE, TIKTOK, INSTAGRAM, AMAZON) ---
     {
         "id": "yt-tech-01",
         "title": "iPhone 16 Pro Max Review: The Truth After 30 Days! (Camera vs Galaxy S24 Ultra)",
@@ -145,7 +196,18 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.youtube.com/watch?v=MKBHDiPhone16",
         "category": "Electronics",
-        "keywords": ["iphone", "iphone 16", "apple", "smartphone", "โทรศัพท์", "ไอโฟน", "มือถือ", "mkbhd", "review"]
+        "keywords": [
+            "iphone",
+            "iphone 16",
+            "apple",
+            "smartphone",
+            "โทรศัพท์",
+            "ไอโฟน",
+            "มือถือ",
+            "mkbhd",
+            "review"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
     },
     {
         "id": "yt-home-01",
@@ -165,7 +227,16 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.youtube.com/watch?v=DysonAirwrapTest",
         "category": "Beauty",
-        "keywords": ["dyson", "airwrap", "hair dryer", "ไดร์เป่าผม", "ทำผม", "เครื่องม้วนผม", "styler"]
+        "keywords": [
+            "dyson",
+            "airwrap",
+            "hair dryer",
+            "ไดร์เป่าผม",
+            "ทำผม",
+            "เครื่องม้วนผม",
+            "styler"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
     },
     {
         "id": "tt-shoes-01",
@@ -185,7 +256,17 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.tiktok.com/@KickTalks/video/7391823",
         "category": "Fashion",
-        "keywords": ["nike", "jordan", "jordan 1", "sneakers", "shoes", "รองเท้า", "ไนกี้", "รองเท้าผ้าใบ"]
+        "keywords": [
+            "nike",
+            "jordan",
+            "jordan 1",
+            "sneakers",
+            "shoes",
+            "รองเท้า",
+            "ไนกี้",
+            "รองเท้าผ้าใบ"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"
     },
     {
         "id": "yt-gaming-01",
@@ -205,7 +286,16 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.youtube.com/watch?v=SwitchOLEDReview",
         "category": "Gaming",
-        "keywords": ["nintendo", "switch", "nintendo switch", "oled", "gaming", "เกม", "เครื่องเกม"]
+        "keywords": [
+            "nintendo",
+            "switch",
+            "nintendo switch",
+            "oled",
+            "gaming",
+            "เกม",
+            "เครื่องเกม"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"
     },
     {
         "id": "ig-fashion-01",
@@ -225,7 +315,15 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.instagram.com/reel/C8921xa",
         "category": "Fashion",
-        "keywords": ["gentle monster", "sunglasses", "glasses", "แว่นตา", "แว่นกันแดด", "แฟชั่น"]
+        "keywords": [
+            "gentle monster",
+            "sunglasses",
+            "glasses",
+            "แว่นตา",
+            "แว่นกันแดด",
+            "แฟชั่น"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     },
     {
         "id": "yt-coffee-01",
@@ -245,6 +343,14 @@ SEED_VIDEOS = [
         "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "source_url": "https://www.youtube.com/watch?v=NespressoVertuoReview",
         "category": "Home",
-        "keywords": ["nespresso", "coffee", "espresso", "กาแฟ", "เครื่องชงกาแฟ", "แคปซูล"]
+        "keywords": [
+            "nespresso",
+            "coffee",
+            "espresso",
+            "กาแฟ",
+            "เครื่องชงกาแฟ",
+            "แคปซูล"
+        ],
+        "download_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
     }
 ]

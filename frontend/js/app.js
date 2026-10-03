@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalViews = document.getElementById("modal-views");
     const modalDate = document.getElementById("modal-date");
     const modalBtnBookmark = document.getElementById("modal-btn-bookmark");
+    const modalBtnDownload = document.getElementById("modal-btn-download");
     const modalBtnSource = document.getElementById("modal-btn-source");
     const btnCloseModal = document.getElementById("btn-close-modal");
 
@@ -70,14 +71,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnClearBookmarks = document.getElementById("btn-clear-bookmarks");
     const btnExportBookmarks = document.getElementById("btn-export-bookmarks");
 
+    // Google Sheets Modal elements
+    const btnOpenSheetsModal = document.getElementById("btn-open-sheets-modal");
+    const btnCloseSheetsModal = document.getElementById("btn-close-sheets-modal");
+    const sheetsModal = document.getElementById("sheets-modal");
+    const inputSheetId = document.getElementById("input-sheet-id");
+    const btnSyncSheets = document.getElementById("btn-sync-sheets");
+    const btnResetSheets = document.getElementById("btn-reset-sheets");
+    const btnDownloadCsvTemplate = document.getElementById("btn-download-csv-template");
+    const sheetsStatusDot = document.getElementById("sheets-status-dot");
+    const sheetsStatusText = document.getElementById("sheets-status-text");
+    const sheetsRowCountBadge = document.getElementById("sheets-row-count-badge");
+
     let currentActiveVideo = null;
 
     // --- Initialize ---
     init();
 
-    function init() {
+    async function init() {
         setupEventListeners();
         updateBookmarkBadge();
+
+        // Check if user has saved a Google Sheet ID
+        if (window.GoogleSheetsDB && window.GoogleSheetsDB.getSheetId()) {
+            updateSheetsStatusUI("loading");
+            const res = await window.GoogleSheetsDB.syncData();
+            updateSheetsStatusUI(res.mode, res.count);
+        } else {
+            updateSheetsStatusUI("fallback");
+        }
+
         // Load initial search (browse all)
         performSearch();
     }
@@ -191,6 +214,78 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateModalBookmarkButtonStatus();
             }
         });
+
+        // Modal MP4 Download Button
+        if (modalBtnDownload) {
+            modalBtnDownload.addEventListener("click", () => {
+                if (currentActiveVideo) {
+                    downloadVideoAsMP4(currentActiveVideo);
+                }
+            });
+        }
+
+        // Google Sheets Modal Controls
+        if (btnOpenSheetsModal) {
+            btnOpenSheetsModal.addEventListener("click", () => {
+                if (inputSheetId && window.GoogleSheetsDB) {
+                    inputSheetId.value = window.GoogleSheetsDB.getSheetId();
+                }
+                sheetsModal.classList.remove("hidden");
+            });
+        }
+
+        if (btnCloseSheetsModal) {
+            btnCloseSheetsModal.addEventListener("click", () => {
+                sheetsModal.classList.add("hidden");
+            });
+        }
+
+        if (sheetsModal) {
+            sheetsModal.addEventListener("click", (e) => {
+                if (e.target === sheetsModal) sheetsModal.classList.add("hidden");
+            });
+        }
+
+        if (btnSyncSheets) {
+            btnSyncSheets.addEventListener("click", async () => {
+                const sheetVal = inputSheetId.value.trim();
+                window.GoogleSheetsDB.setSheetId(sheetVal);
+                updateSheetsStatusUI("loading");
+                showToast("🔄 กำลังเชื่อมต่อและดึงข้อมูลจาก Google Sheets...", "info");
+
+                const res = await window.GoogleSheetsDB.syncData();
+                if (res.success && res.mode === "google_sheets") {
+                    updateSheetsStatusUI("connected", res.count);
+                    showToast(`✅ เชื่อมต่อ Google Sheets สำเร็จ! โหลดวิดีโอได้ ${res.count} รายการ`, "success");
+                    performSearch();
+                    setTimeout(() => sheetsModal.classList.add("hidden"), 1000);
+                } else if (!sheetVal) {
+                    updateSheetsStatusUI("fallback");
+                    showToast("ℹ️ สลับมาใช้ฐานข้อมูลเริ่มต้นของระบบ", "info");
+                    performSearch();
+                } else {
+                    updateSheetsStatusUI("error");
+                    showToast(`❌ เชื่อมต่อล้มเหลว: ${res.error || 'โปรดตรวจสิทธิ์การแชร์'}`, "error");
+                }
+            });
+        }
+
+        if (btnResetSheets) {
+            btnResetSheets.addEventListener("click", async () => {
+                window.GoogleSheetsDB.setSheetId("");
+                if (inputSheetId) inputSheetId.value = "";
+                await window.GoogleSheetsDB.syncData("");
+                updateSheetsStatusUI("fallback");
+                showToast("ℹ️ รีเซ็ตกลับไปใช้ฐานข้อมูลระบบแล้ว", "info");
+                performSearch();
+            });
+        }
+
+        if (btnDownloadCsvTemplate) {
+            btnDownloadCsvTemplate.addEventListener("click", () => {
+                downloadCSVTemplate();
+            });
+        }
 
         // Bookmarks Drawer Controls
         btnOpenBookmarks.addEventListener("click", openBookmarksDrawer);
@@ -380,6 +475,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                     <div class="flex items-center space-x-1.5">
+                        <button class="btn-download-card w-7 h-7 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/30 text-emerald-400 flex items-center justify-center transition-all shadow-sm" title="ดาวน์โหลดไฟล์ MP4">
+                            <i class="fa-solid fa-circle-down text-xs"></i>
+                        </button>
                         <button class="btn-bookmark-card w-7 h-7 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-all ${isBookmarked ? 'text-amber-400' : ''}" title="บันทึกวิดีโอ">
                             <i class="fa-solid fa-bookmark text-xs"></i>
                         </button>
@@ -393,6 +491,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         // Card Click Handlers
+        const btnDownloadCard = div.querySelector(".btn-download-card");
+        btnDownloadCard.addEventListener("click", (e) => {
+            e.stopPropagation();
+            downloadVideoAsMP4(video);
+        });
+
         const btnBookmarkCard = div.querySelector(".btn-bookmark-card");
         btnBookmarkCard.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -559,5 +663,138 @@ document.addEventListener("DOMContentLoaded", () => {
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    // --- MP4 Video Download Function ---
+    async function downloadVideoAsMP4(video) {
+        if (!video) return;
+        const cleanTitle = (video.title || "video").replace(/[\\\/?:*"<>|]/g, "_").trim().slice(0, 50);
+        const filename = `${cleanTitle}.mp4`;
+        const downloadUrl = video.download_url;
+
+        if (!downloadUrl) {
+            showToast(`⚠️ ไม่มีลิงก์ไฟล์ MP4 โดยตรง กำลังเปิดหน้าต้นทาง: ${video.platform_name}`, "warning");
+            if (video.source_url && video.source_url !== "#") {
+                window.open(video.source_url, "_blank");
+            }
+            return;
+        }
+
+        showToast(`⏳ เริ่มเตรียมดาวน์โหลด: ${filename}`, "info");
+
+        try {
+            // Attempt direct fetch as blob for seamless download with target filename
+            const response = await fetch(downloadUrl);
+            if (!response.ok) throw new Error("Direct blob fetch failed");
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+            }, 2000);
+
+            showToast(`✅ ดาวน์โหลดเสร็จสิ้น: ${filename}`, "success");
+        } catch (err) {
+            console.warn("Direct blob download failed, falling back to anchor trigger:", err);
+            // Fallback: direct anchor download trigger
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = downloadUrl;
+            a.download = filename;
+            a.target = "_blank";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => document.body.removeChild(a), 1500);
+
+            showToast(`🚀 เริ่มการดาวน์โหลดผ่านลิงก์ตรง: ${filename}`, "info");
+        }
+    }
+
+    // --- Google Sheets UI Status Helper ---
+    function updateSheetsStatusUI(status, count = 0) {
+        if (!sheetsStatusDot || !sheetsStatusText) return;
+
+        const currentCount = count || (window.SEED_VIDEOS ? window.SEED_VIDEOS.length : 12);
+        if (sheetsRowCountBadge) {
+            sheetsRowCountBadge.textContent = `${currentCount} คลิป`;
+        }
+
+        if (status === "connected" || status === "google_sheets") {
+            sheetsStatusDot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400 animate-pulse";
+            sheetsStatusText.innerHTML = `<span class="text-emerald-400 font-bold">เชื่อมต่อ Google Sheets แล้ว (${currentCount} คลิป)</span>`;
+            if (btnOpenSheetsModal) {
+                btnOpenSheetsModal.classList.add("border-emerald-500/60");
+            }
+        } else if (status === "loading") {
+            sheetsStatusDot.className = "w-2 h-2 rounded-full bg-amber-400 animate-ping";
+            sheetsStatusText.innerHTML = `<span class="text-amber-300">กำลังดึงข้อมูลจาก Google Sheets...</span>`;
+        } else if (status === "error") {
+            sheetsStatusDot.className = "w-2 h-2 rounded-full bg-rose-500 shadow-sm shadow-rose-500";
+            sheetsStatusText.innerHTML = `<span class="text-rose-400">เชื่อมต่อไม่สำเร็จ (สลับใช้ข้อมูลเริ่มต้น)</span>`;
+        } else {
+            // fallback / default
+            sheetsStatusDot.className = "w-2 h-2 rounded-full bg-slate-500";
+            sheetsStatusText.innerHTML = `<span class="text-slate-300">ข้อมูลเริ่มต้นของระบบ (Default)</span>`;
+        }
+    }
+
+    // --- CSV Template Exporter ---
+    function downloadCSVTemplate() {
+        if (!window.GoogleSheetsDB) return;
+        const csvContent = window.GoogleSheetsDB.generateCSVTemplate();
+        const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ReviewSearch_GoogleSheets_Template.csv";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 1500);
+        showToast("📄 ดาวน์โหลดแม่แบบ CSV สำหรับ Google Sheets แล้ว!", "success");
+    }
+
+    // --- Toast Notifications ---
+    function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        if (!container) return;
+
+        const toast = document.createElement("div");
+        let bg = "bg-slate-900 border-slate-700 text-slate-100";
+        if (type === "success") bg = "bg-emerald-950/95 border-emerald-500/50 text-emerald-200 shadow-emerald-950/50";
+        if (type === "warning") bg = "bg-amber-950/95 border-amber-500/50 text-amber-200 shadow-amber-950/50";
+        if (type === "error") bg = "bg-rose-950/95 border-rose-500/50 text-rose-200 shadow-rose-950/50";
+
+        toast.className = `p-3.5 rounded-xl border shadow-2xl flex items-center space-x-2.5 text-xs pointer-events-auto transition-all transform translate-y-2 opacity-0 duration-200 ${bg}`;
+        toast.innerHTML = `
+            <span class="flex-grow font-medium">${message}</span>
+            <button class="text-slate-400 hover:text-white p-0.5"><i class="fa-solid fa-xmark"></i></button>
+        `;
+
+        toast.querySelector("button").addEventListener("click", () => {
+            toast.remove();
+        });
+
+        container.appendChild(toast);
+        requestAnimationFrame(() => {
+            toast.classList.remove("translate-y-2", "opacity-0");
+        });
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.add("opacity-0", "translate-y-2");
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 4500);
     }
 });
