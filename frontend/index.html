@@ -83,6 +83,39 @@
                         </button>
                     </div>
 
+                    <!-- Live Multi-Platform Quick Launch Bar -->
+                    <div id="live-quick-launch" class="max-w-3xl mx-auto p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+                        <div class="flex items-center justify-between text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1.5 font-semibold text-indigo-300">
+                                <i class="fa-solid fa-satellite-dish text-indigo-400 animate-pulse"></i>
+                                <span>เปิดค้นหาวิดีโอรีวิวจริงบนแพลตฟอร์ม (Live Direct Search):</span>
+                            </span>
+                            <span class="text-[10px] text-slate-500">คลิกเพื่อเปิดดูผลค้นหาบนเว็บต้นทาง</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <a id="btn-live-bili" href="https://search.bilibili.com/video?keyword=%E6%B5%8B%E8%AF%84" target="_blank" class="px-3 py-1.5 rounded-lg bg-pink-950/40 hover:bg-pink-900/60 border border-pink-500/30 text-pink-300 flex items-center gap-1.5 transition-all shadow-sm">
+                                <span>📺</span> <span class="font-medium">Bilibili 🇨🇳</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <a id="btn-live-douyin" href="https://www.douyin.com/search/%E6%B5%8B%E8%AF%84" target="_blank" class="px-3 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/30 text-rose-300 flex items-center gap-1.5 transition-all shadow-sm">
+                                <span>🎵</span> <span class="font-medium">Douyin 🇨🇳</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <a id="btn-live-xhs" href="https://www.xiaohongshu.com" target="_blank" class="px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 flex items-center gap-1.5 transition-all shadow-sm">
+                                <span>📕</span> <span class="font-medium">Xiaohongshu 🇨🇳</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <a id="btn-live-yt" href="https://www.youtube.com/results?search_query=review" target="_blank" class="px-3 py-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 flex items-center gap-1.5 transition-all shadow-sm">
+                                <span>▶️</span> <span class="font-medium">YouTube 🌐</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <a id="btn-live-tt" href="https://www.tiktok.com" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 flex items-center gap-1.5 transition-all shadow-sm">
+                                <span>📱</span> <span class="font-medium">TikTok 🌐</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Quick Suggestions Chips -->
                     <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
                         <span class="text-slate-400 font-medium">คำค้นหายอดนิยม:</span>
@@ -328,6 +361,16 @@
                     <p class="text-[11px] text-slate-400 leading-normal">
                         💡 คำแนะนำ: ใน Google Sheets ให้คลิกปุ่ม <strong>แชร์ (Share)</strong> ➔ ตั้งค่าเป็น <strong>"ทุกคนที่มีลิงก์สามารถดูได้" (Viewer)</strong>
                     </p>
+                </div>
+
+                <!-- Optional YouTube API Key -->
+                <div class="space-y-1.5 pt-2 border-t border-slate-800/80">
+                    <label class="font-medium text-slate-300 block flex items-center justify-between">
+                        <span>YouTube Data API v3 Key (ตัวเลือกเสริม):</span>
+                        <span class="text-[10px] text-slate-500">ฟรี ไม่บังคับใส่</span>
+                    </label>
+                    <input type="text" id="input-yt-api-key" placeholder="AIzaSy... (หากมี Key จะดึงคลิป YouTube สดมาเล่นในหน้าเว็บทันที)" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-red-500 text-xs">
                 </div>
 
                 <!-- Action Buttons -->

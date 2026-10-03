@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnCloseSheetsModal = document.getElementById("btn-close-sheets-modal");
     const sheetsModal = document.getElementById("sheets-modal");
     const inputSheetId = document.getElementById("input-sheet-id");
+    const inputYtApiKey = document.getElementById("input-yt-api-key");
     const btnSyncSheets = document.getElementById("btn-sync-sheets");
     const btnResetSheets = document.getElementById("btn-reset-sheets");
     const btnDownloadCsvTemplate = document.getElementById("btn-download-csv-template");
@@ -101,6 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
             updateSheetsStatusUI("fallback");
         }
 
+        // Initialize Quick Launch Bar
+        updateLiveQuickLaunch("");
+
         // Load initial search (browse all)
         performSearch();
     }
@@ -123,12 +127,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        // Real-time update of live platform links while typing
+        inputTextQuery.addEventListener("input", () => {
+            updateLiveQuickLaunch(inputTextQuery.value.trim());
+        });
+
         // Quick chip clicks
         document.querySelectorAll(".quick-chip").forEach(chip => {
             chip.addEventListener("click", () => {
                 inputTextQuery.value = chip.textContent;
                 state.query = chip.textContent;
                 setMode("text");
+                updateLiveQuickLaunch(state.query);
                 performSearch();
             });
         });
@@ -230,6 +240,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (inputSheetId && window.GoogleSheetsDB) {
                     inputSheetId.value = window.GoogleSheetsDB.getSheetId();
                 }
+                if (inputYtApiKey) {
+                    inputYtApiKey.value = localStorage.getItem("reviewsearch_youtube_api_key") || "";
+                }
                 sheetsModal.classList.remove("hidden");
             });
         }
@@ -250,8 +263,19 @@ document.addEventListener("DOMContentLoaded", () => {
             btnSyncSheets.addEventListener("click", async () => {
                 const sheetVal = inputSheetId.value.trim();
                 window.GoogleSheetsDB.setSheetId(sheetVal);
+
+                // Save YouTube API key
+                if (inputYtApiKey) {
+                    const ytKey = inputYtApiKey.value.trim();
+                    if (ytKey) {
+                        localStorage.setItem("reviewsearch_youtube_api_key", ytKey);
+                    } else {
+                        localStorage.removeItem("reviewsearch_youtube_api_key");
+                    }
+                }
+
                 updateSheetsStatusUI("loading");
-                showToast("🔄 กำลังเชื่อมต่อและดึงข้อมูลจาก Google Sheets...", "info");
+                showToast("🔄 กำลังเชื่อมต่อและดึงข้อมูล...", "info");
 
                 const res = await window.GoogleSheetsDB.syncData();
                 if (res.success && res.mode === "google_sheets") {
@@ -263,6 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateSheetsStatusUI("fallback");
                     showToast("ℹ️ สลับมาใช้ฐานข้อมูลเริ่มต้นของระบบ", "info");
                     performSearch();
+                    setTimeout(() => sheetsModal.classList.add("hidden"), 1000);
                 } else {
                     updateSheetsStatusUI("error");
                     showToast(`❌ เชื่อมต่อล้มเหลว: ${res.error || 'โปรดตรวจสิทธิ์การแชร์'}`, "error");
@@ -348,6 +373,22 @@ document.addEventListener("DOMContentLoaded", () => {
         btnSearchImage.setAttribute("disabled", "true");
     }
 
+    function updateLiveQuickLaunch(query) {
+        if (!window.LocalSearchEngine || !window.LocalSearchEngine.getLiveSearchUrls) return;
+        const urls = window.LocalSearchEngine.getLiveSearchUrls(query || "review");
+        const btnBili = document.getElementById("btn-live-bili");
+        const btnDouyin = document.getElementById("btn-live-douyin");
+        const btnXhs = document.getElementById("btn-live-xhs");
+        const btnYt = document.getElementById("btn-live-yt");
+        const btnTt = document.getElementById("btn-live-tt");
+
+        if (btnBili) btnBili.href = urls.bilibili;
+        if (btnDouyin) btnDouyin.href = urls.douyin;
+        if (btnXhs) btnXhs.href = urls.xiaohongshu;
+        if (btnYt) btnYt.href = urls.youtube;
+        if (btnTt) btnTt.href = urls.tiktok;
+    }
+
     async function performSearch() {
         showLoading(true);
         emptyState.classList.add("hidden");
@@ -366,11 +407,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (res.image_analysis && res.image_analysis.detection) {
                     const det = res.image_analysis.detection;
                     aiDetectedCategory.innerHTML = `<span class="font-bold">ตรวจพบ:</span> ${det.category} | <span class="font-bold">คำค้นหา:</span> "${det.primary_query}"`;
+                    updateLiveQuickLaunch(det.primary_query);
                 }
                 
                 state.currentResults = res.search_results ? res.search_results.results : [];
                 renderResults(res.search_results);
             } else {
+                updateLiveQuickLaunch(state.query);
+
                 res = await window.api.searchByText({
                     query: state.query,
                     region: state.region,
@@ -428,6 +472,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const regionIcon = video.region === "china" ? "🇨🇳" : "🌐";
         const isBookmarked = isVideoBookmarked(video.id);
 
+        const scoreBadge = video.is_live_search
+            ? `<div class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-xs shadow-md flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span><span>ค้นหาแบบสด</span></div>`
+            : `<div class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-emerald-500/90 text-slate-950 font-bold text-xs shadow-md">${video.match_score || 95}% Match</div>`;
+
+        const durationBadge = video.is_live_search
+            ? `<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-slate-950/90 text-rose-300 text-xs font-semibold border border-rose-500/40"><i class="fa-solid fa-satellite-dish text-[10px] mr-1 text-rose-400"></i>Live Direct</div>`
+            : `<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-slate-950/80 text-slate-200 text-xs font-medium border border-slate-800"><i class="fa-regular fa-clock text-[10px] mr-1"></i>${video.duration || '00:00'}</div>`;
+
         div.innerHTML = `
             <!-- Thumbnail container -->
             <div class="relative aspect-video bg-slate-950 overflow-hidden">
@@ -446,14 +498,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
 
                 <!-- Match Score top-right -->
-                <div class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-emerald-500/90 text-slate-950 font-bold text-xs shadow-md">
-                    ${video.match_score || 95}% Match
-                </div>
+                ${scoreBadge}
 
                 <!-- Duration bottom-right -->
-                <div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-slate-950/80 text-slate-200 text-xs font-medium border border-slate-800">
-                    <i class="fa-regular fa-clock text-[10px] mr-1"></i>${video.duration || '00:00'}
-                </div>
+                ${durationBadge}
             </div>
 
             <!-- Card Body -->
@@ -482,8 +530,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <i class="fa-solid fa-bookmark text-xs"></i>
                         </button>
                         <button class="btn-preview-card px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[11px] shadow-sm flex items-center space-x-1">
-                            <i class="fa-solid fa-circle-play"></i>
-                            <span>ดูรีวิว</span>
+                            <i class="fa-solid ${video.is_live_search ? 'fa-arrow-up-right-from-square' : 'fa-circle-play'}"></i>
+                            <span>${video.is_live_search ? 'เปิดค้นหา' : 'ดูรีวิว'}</span>
                         </button>
                     </div>
                 </div>
@@ -519,7 +567,18 @@ document.addEventListener("DOMContentLoaded", () => {
         modalPlatformBadge.className = `px-2.5 py-1 rounded font-semibold text-xs flex items-center gap-1.5 ${badgeClass}`;
         modalPlatformBadge.innerHTML = `<span>${video.platform_icon || '🎥'}</span> <span>${video.platform_name}</span>`;
 
-        modalMatchScore.textContent = `${video.match_score || 95}% Match`;
+        if (video.is_live_search) {
+            modalMatchScore.className = "text-xs px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-semibold flex items-center gap-1.5";
+            modalMatchScore.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span> <span>ผลค้นหาสดบน ${video.platform_name}</span>`;
+            modalBtnSource.innerHTML = `<span>เปิดดูวิดีโอบน ${video.platform_name}</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+            modalBtnSource.className = "px-4 py-2 rounded-lg bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-1.5";
+        } else {
+            modalMatchScore.className = "text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium";
+            modalMatchScore.textContent = `${video.match_score || 95}% Match`;
+            modalBtnSource.innerHTML = `<span>ไปยังวิดีโอต้นทาง</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>`;
+            modalBtnSource.className = "px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all flex items-center space-x-1.5";
+        }
+
         modalVideoTitle.textContent = video.title;
         modalVideoDesc.textContent = video.description || "วิดีโอรีวิวสินค้าพร้อมรายละเอียดการใช้งาน";
 
