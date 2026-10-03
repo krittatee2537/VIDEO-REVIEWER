@@ -107,12 +107,6 @@ async def search_by_image(
 # Mount static frontend directory
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
 if os.path.exists(frontend_dir):
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
-
-    @app.get("/", response_class=HTMLResponse)
-    def read_root():
-        index_path = os.path.join(frontend_dir, "index.html")
-        if os.path.exists(index_path):
-            with open(index_path, "r", encoding="utf-8") as f:
-                return f.read()
-        return "<h1>Frontend index.html not found</h1>"
+    # Mounted at "/" (after the API routes) so index.html's relative paths
+    # (css/..., js/...) resolve the same way locally and on GitHub Pages.
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")

@@ -66,3 +66,11 @@ product-review-video-search/
 ├── run.py                         # One-click startup script
 └── README.md                      # Documentation
 ```
+
+---
+
+## 🌐 เปิดใช้งานผ่าน GitHub Pages
+
+เว็บเปิดได้ที่: https://krittatee2537.github.io/VIDEO-REVIEWER/
+
+บน GitHub Pages ไม่มี backend Python หน้าเว็บจะค้นหาและวิเคราะห์ภาพในเบราว์เซอร์เองด้วย `frontend/js/engine.js` และข้อมูลใน `frontend/js/data.js` (สร้างจาก `backend/services/seed_dataset.py`) เมื่อรัน `python run.py` ในเครื่อง หน้าเว็บจะใช้ backend FastAPI ให้อัตโนมัติ
