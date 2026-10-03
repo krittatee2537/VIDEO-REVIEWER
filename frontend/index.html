@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบค้นหาวิดีโอรีวิวสินค้า - Product Review Video Search</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-['Prompt','Inter',sans-serif] min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                    <i class="fa-solid fa-film text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent flex items-center gap-2">
+                        ReviewSearch AI <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">v1.0</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">ค้นหาวิดีโอรีวิวสินค้าจากจีน 🇨🇳 และต่างประเทศ 🌐</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-bookmarks" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-medium text-slate-200 transition-all">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i>
+                    <span>บุ๊กมาร์ก (<span id="bookmark-count">0</span>)</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+        
+        <!-- Search Mode Tabs & Hero Card -->
+        <section class="bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+            <!-- Decorative Glow Background -->
+            <div class="absolute -top-24 -left-24 w-72 h-72 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-pink-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-6">
+                
+                <!-- Tab Switchers -->
+                <div class="flex items-center justify-center space-x-2 p-1 bg-slate-950/70 border border-slate-800 rounded-xl max-w-md mx-auto">
+                    <button id="tab-text" class="tab-btn active flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg text-xs md:text-sm font-semibold transition-all">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>ค้นหาด้วยข้อความ</span>
+                    </button>
+                    <button id="tab-image" class="tab-btn flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg text-xs md:text-sm font-semibold transition-all text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>ค้นหาด้วยรูปภาพ</span>
+                    </button>
+                </div>
+
+                <!-- TEXT SEARCH SECTION -->
+                <div id="section-text-search" class="space-y-4">
+                    <div class="relative max-w-3xl mx-auto">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="text" id="input-text-query" placeholder="พิมพ์ชื่อสินค้าหรือแบรนด์ (เช่น iPhone 16 Pro Max, Adidas Samba, Labubu, Holdlive...)" 
+                               class="w-full bg-slate-950/90 border border-slate-700/80 rounded-xl pl-12 pr-28 py-3.5 text-sm md:text-base text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-inner">
+                        <button id="btn-search-text" class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs md:text-sm font-semibold shadow-md shadow-indigo-600/30 transition-all flex items-center space-x-1.5">
+                            <span>ค้นหา</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Quick Suggestions Chips -->
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+                        <span class="text-slate-400 font-medium">คำค้นหายอดนิยม:</span>
+                        <button class="quick-chip">iPhone 16 Pro Max</button>
+                        <button class="quick-chip">Adidas Samba</button>
+                        <button class="quick-chip">Labubu Pop Mart</button>
+                        <button class="quick-chip">Holdlive Lipstick</button>
+                        <button class="quick-chip">Dyson Airwrap</button>
+                    </div>
+                </div>
+
+                <!-- IMAGE SEARCH SECTION (HIDDEN BY DEFAULT) -->
+                <div id="section-image-search" class="hidden space-y-4 max-w-3xl mx-auto">
+                    <!-- Drop Zone -->
+                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500/80 rounded-xl p-6 text-center bg-slate-950/50 hover:bg-slate-900/60 transition-all cursor-pointer group">
+                        <input type="file" id="input-image-file" accept="image/*" class="hidden">
+                        
+                        <div id="drop-zone-prompt" class="space-y-3">
+                            <div class="w-14 h-14 mx-auto rounded-full bg-slate-800/80 group-hover:bg-indigo-500/20 group-hover:text-indigo-400 flex items-center justify-center text-slate-400 text-2xl transition-all">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">ลากภาพสินค้ามาวางที่นี่ หรือ <span class="text-indigo-400 underline">คลิกเพื่อเลือกไฟล์</span></p>
+                                <p class="text-xs text-slate-500 mt-1">รองรับ JPG, PNG, WEBP (สูงสุด 10MB)</p>
+                            </div>
+                        </div>
+
+                        <!-- Image Preview Area (Hidden initially) -->
+                        <div id="image-preview-container" class="hidden flex flex-col md:flex-row items-center justify-center gap-4 text-left">
+                            <img id="img-preview" src="" alt="Uploaded product preview" class="w-32 h-32 object-cover rounded-lg border border-slate-700 shadow-md">
+                            <div class="space-y-2 text-xs text-slate-300">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold text-slate-100" id="img-file-name">filename.jpg</span>
+                                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400" id="img-file-size">1.2 MB</span>
+                                </div>
+                                <div id="ai-detection-info" class="p-2.5 rounded-lg bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 space-y-1">
+                                    <div class="flex items-center space-x-1 font-semibold">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                                        <span>AI Vision Detection:</span>
+                                    </div>
+                                    <p id="ai-detected-category" class="text-xs">วิเคราะห์หมวดหมู่สินค้า...</p>
+                                </div>
+                                <button id="btn-change-image" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">
+                                    <i class="fa-solid fa-arrow-rotate-left mr-1"></i> เปลี่ยนรูปภาพ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Button for Image Mode -->
+                    <button id="btn-search-image" disabled class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold shadow-lg shadow-indigo-600/20 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>วิเคราะห์ภาพและค้นหาวิดีโอรีวิว</span>
+                    </button>
+                </div>
+
+                <!-- FILTERS & OPTIONS BAR -->
+                <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4 text-xs">
+                    
+                    <!-- Region Filter -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400 font-medium">แหล่งวิดีโอ:</span>
+                        <div class="inline-flex p-1 bg-slate-950/80 border border-slate-800 rounded-lg">
+                            <button data-region="all" class="filter-region-btn active px-3 py-1 rounded-md font-medium transition-all">🌏 ทั้งหมด</button>
+                            <button data-region="china" class="filter-region-btn px-3 py-1 rounded-md font-medium text-slate-400 hover:text-slate-200 transition-all">🇨🇳 จีน</button>
+                            <button data-region="international" class="filter-region-btn px-3 py-1 rounded-md font-medium text-slate-400 hover:text-slate-200 transition-all">🌐 ต่างประเทศ</button>
+                        </div>
+                    </div>
+
+                    <!-- Platform Filter -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400 font-medium">แพลตฟอร์ม:</span>
+                        <select id="select-platform" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <option value="all">ทั้งหมด (All Platforms)</option>
+                            <option value="bilibili">🇨🇳 Bilibili (哔哩哔哩)</option>
+                            <option value="douyin">🇨🇳 Douyin (抖音)</option>
+                            <option value="xiaohongshu">🇨🇳 Xiaohongshu (小红书)</option>
+                            <option value="kuaishou">🇨🇳 Kuaishou (快手)</option>
+                            <option value="youtube">🌐 YouTube</option>
+                            <option value="tiktok">🌐 TikTok</option>
+                            <option value="instagram">🌐 Instagram Reels</option>
+                        </select>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400 font-medium">หมวดหมู่:</span>
+                        <select id="select-category" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <option value="all">ทุกหมวดหมู่</option>
+                            <option value="Electronics">📱 สมาร์ทโฟน & IT</option>
+                            <option value="Beauty">💄 เครื่องสำอาง & ความงาม</option>
+                            <option value="Fashion">👟 แฟชั่น & รองเท้า</option>
+                            <option value="Home">🏠 เครื่องใช้ในบ้าน</option>
+                            <option value="Toys">🧸 ของเล่น & สะสม</option>
+                        </select>
+                    </div>
+
+                    <!-- Sort By -->
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400 font-medium">เรียงตาม:</span>
+                        <select id="select-sort" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500">
+                            <option value="relevance">ตรงกับคำค้นหา (Relevance)</option>
+                            <option value="views">ยอดเข้าชมสูงสุด (Most Viewed)</option>
+                            <option value="newest">อัพโหลดล่าสุด (Newest)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RESULTS DASHBOARD HEADER -->
+        <section class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-2">
+            <div>
+                <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                    <span>ผลการค้นหาวิดีโอรีวิว</span>
+                    <span id="result-badge-count" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-indigo-400 border border-slate-700">0 รายการ</span>
+                </h2>
+                <p id="result-subtitle" class="text-xs text-slate-400 mt-0.5">ค้นหาครอบคลุมแพลตฟอร์มจีนและต่างประเทศ</p>
+            </div>
+
+            <!-- Platform Distribution Badges -->
+            <div id="stats-distribution" class="flex flex-wrap items-center gap-2 text-xs">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- LOADING SPINNER -->
+        <div id="loading-state" class="hidden py-16 text-center space-y-4">
+            <div class="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+            <p class="text-sm font-medium text-slate-300">กำลังค้นหาวิดีโอรีวิวจากแหล่งข้อมูล...</p>
+        </div>
+
+        <!-- RESULTS VIDEO GRID -->
+        <section id="results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Dynamically populated cards -->
+        </section>
+
+        <!-- EMPTY STATE (HIDDEN INITIALLY) -->
+        <div id="empty-state" class="hidden py-16 text-center space-y-4 border border-dashed border-slate-800 rounded-2xl bg-slate-900/40">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-3xl">
+                <i class="fa-solid fa-film-slash"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-200">ไม่พบวิดีโอรีวิวที่ตรงกับเงื่อนไข</h3>
+                <p class="text-xs text-slate-400 max-w-md mx-auto mt-1">ลองเปลี่ยนคำค้นหา หรือเลือกตัวกรองเป็น "ทั้งหมด" เพื่อดูวิดีโอครอบคลุมมากขึ้น</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- VIDEO EMBED / PREVIEW MODAL -->
+    <div id="video-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl space-y-0 relative animate-in fade-in zoom-in duration-200">
+            
+            <!-- Modal Header -->
+            <div class="p-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span id="modal-platform-badge" class="px-2.5 py-1 rounded font-semibold text-xs flex items-center gap-1.5">
+                        <!-- Platform Badge -->
+                    </span>
+                    <span id="modal-match-score" class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">98% Match</span>
+                </div>
+                <button id="btn-close-modal" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Video Frame Container -->
+            <div class="aspect-video bg-black relative">
+                <iframe id="modal-iframe" class="w-full h-full" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            </div>
+
+            <!-- Modal Content & Details -->
+            <div class="p-5 space-y-4 max-h-[40vh] overflow-y-auto">
+                <h3 id="modal-video-title" class="text-base font-bold text-slate-100 leading-snug">Video Title Here</h3>
+                <p id="modal-video-desc" class="text-xs text-slate-300 leading-relaxed">Video description...</p>
+
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-slate-800 text-xs">
+                    <!-- Author info -->
+                    <div class="flex items-center space-x-2.5">
+                        <img id="modal-author-avatar" src="" alt="Author" class="w-8 h-8 rounded-full border border-slate-700 object-cover">
+                        <div>
+                            <p id="modal-author-name" class="font-semibold text-slate-200">Author Name</p>
+                            <p class="text-slate-400 text-[11px]"><span id="modal-views">0</span> เข้าชม • <span id="modal-date">Date</span></p>
+                        </div>
+                    </div>
+
+                    <!-- External Actions -->
+                    <div class="flex items-center space-x-2">
+                        <button id="modal-btn-bookmark" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-all flex items-center space-x-1.5">
+                            <i class="fa-solid fa-bookmark text-amber-400"></i>
+                            <span>บันทึก</span>
+                        </button>
+                        <a id="modal-btn-source" href="#" target="_blank" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-all flex items-center space-x-1.5">
+                            <span>ไปยังวิดีโอต้นทาง</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOOKMARKS DRAWER PANEL -->
+    <div id="bookmarks-drawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+            <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-amber-400"></i>
+                <span>วิดีโอที่บันทึกไว้ (Bookmarks)</span>
+            </h3>
+            <button id="btn-close-bookmarks" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="bookmarks-list" class="flex-grow p-4 space-y-3 overflow-y-auto">
+            <!-- Populated dynamically -->
+        </div>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs">
+            <button id="btn-clear-bookmarks" class="text-rose-400 hover:text-rose-300">ลบทั้งหมด</button>
+            <button id="btn-export-bookmarks" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200">ส่งออกข้อมูล JSON</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-800/60 bg-slate-950/60 py-4 px-4 text-center text-xs text-slate-500">
+        <p>ReviewSearch AI System • ระบบค้นหาวิดีโอรีวิวสินค้า 🇨🇳 จีน & 🌐 ต่างประเทศ</p>
+    </footer>
+
+    <!-- App JS -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

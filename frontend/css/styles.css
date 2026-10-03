@@ -1,0 +1,106 @@
+/* Custom Styles for Product Review Video Search System */
+
+/* Tab Button Styling */
+.tab-btn.active {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+/* Region Filter Active Button */
+.filter-region-btn.active {
+    background-color: #312e81;
+    color: #818cf8;
+    border: 1px solid rgba(129, 140, 248, 0.3);
+}
+
+/* Quick Search Chip */
+.quick-chip {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(51, 65, 85, 0.8);
+    color: #cbd5e1;
+    font-weight: 400;
+    transition: all 0.2s ease;
+}
+
+.quick-chip:hover {
+    background-color: rgba(79, 70, 229, 0.2);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #a5b4fc;
+    transform: translateY(-1px);
+}
+
+/* Video Card Glassmorphism */
+.video-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(30, 41, 59, 0.8);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 0 20px -5px rgba(79, 70, 229, 0.25);
+}
+
+/* Platform Badge Colors */
+.badge-bilibili {
+    background: rgba(251, 114, 153, 0.15);
+    color: #ff6699;
+    border: 1px solid rgba(251, 114, 153, 0.3);
+}
+
+.badge-douyin {
+    background: rgba(254, 44, 85, 0.15);
+    color: #ff3b5c;
+    border: 1px solid rgba(254, 44, 85, 0.3);
+}
+
+.badge-xiaohongshu {
+    background: rgba(255, 36, 66, 0.15);
+    color: #ff3855;
+    border: 1px solid rgba(255, 36, 66, 0.3);
+}
+
+.badge-kuaishou {
+    background: rgba(255, 80, 0, 0.15);
+    color: #ff6600;
+    border: 1px solid rgba(255, 80, 0, 0.3);
+}
+
+.badge-youtube {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ff4d4d;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.badge-tiktok {
+    background: rgba(0, 242, 254, 0.15);
+    color: #00d2fe;
+    border: 1px solid rgba(0, 242, 254, 0.3);
+}
+
+.badge-instagram {
+    background: rgba(225, 48, 108, 0.15);
+    color: #f56040;
+    border: 1px solid rgba(225, 48, 108, 0.3);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+}
